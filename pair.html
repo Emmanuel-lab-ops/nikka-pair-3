@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pair Code</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Pacifico&family=Roboto:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url("https://files.catbox.moe/3283yo.jpg");
+      background-size: cover;
+      background-position: center;
+      font-family: 'Raleway', sans-serif;
+      color: white;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.7); /* Black overlay for readability */
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .box {
+      width: 350px;
+      height: 500px;
+      padding: 20px;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+      transition: transform 0.3s ease;
+    }
+
+    .box:hover {
+      transform: scale(1.05); /* Slight zoom on hover */
+    }
+
+    #text h3 {
+      font-family: 'Roboto', sans-serif; /* New font for the title */
+      margin-bottom: 20px;
+    }
+
+    #text h6 {
+      font-family: 'Pacifico', cursive; /* Keeping the same font for the subtitle */
+      margin-bottom: 20px;
+    }
+
+    .input-container {
+      display: flex;
+      background: rgba(255, 255, 255, 0.2); /* Transparent input background */
+      border-radius: 1rem;
+      padding: 0.5rem;
+      max-width: 300px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .input-container input {
+      border-radius: 0.8rem 0 0 0.8rem;
+      background: #fff;
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      transition: all 0.2s ease-in-out;
+      color: #333;
+      flex: 1;
+    }
+
+    .input-container button {
+      padding: 1rem;
+      background: #e53935; /* Changed to vibrant red */
+      color: white;
+      border: none;
+      border-radius: 0 1rem 1rem 0;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .input-container button:hover {
+      background: #b71c1c; /* Darker red on hover */
+    }
+
+    .centered-text {
+      color: #fff;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .footer-text {
+      color: #fff;
+      font-family: 'Pacifico', cursive;
+      font-size: 0.6rem; /* Drastically reduced font size */
+      text-align: center;
+      margin-top: 10px;
+      background: linear-gradient(to right, #ff007f, #00ff7f); /* Mixed color font effect */
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    @media (max-width: 500px) {
+      .box {
+        width: 90%; 
+      }
+    }
+
+    /* Animation for fade-in effect */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box" id="box">
+      <div id="text">
+        <h3 class="centered-text">DEMONIC™-CJ-V3 Pair Code</h3>
+        <h6 class="centered-text">Enter Your Number with Country Code.</h6>
+        <div class="input-container">
+          <input placeholder="234813862xxxx" type="number" id="number" required>
+          <button id="submit">Submit</button>
+        </div>
+        
+        <a id="waiting-message" class="centered-text" style="display: none;">Generating...</a>
+        <main id="pair" class="centered-text"></main>
+      </div>
+    </div>
+    <footer>
+      <p class="footer-text">Made by CËËJÀY Tëçh 😈</p>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    let a = document.getElementById("pair");
+    let b = document.getElementById("submit");
+    let c = document.getElementById("number");
+
+    async function Copy() {
+      let text = document.getElementById("copy").innerText;
+      await navigator.clipboard.writeText(text.replace('CODE: ', ''));
+      document.getElementById("copy").innerText = "COPIED";
+      setTimeout(() => {
+        document.getElementById("copy").innerText = text;
+      }, 500);
+    }
+
+    b.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const inputNumber = c.value.replace(/[^0-9]/g, "");
+      if (!inputNumber) {
+        a.innerHTML = '<span style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</span><br><br>';
+      } else if (inputNumber.length < 11) {
+        a.innerHTML = '<span style="color:red;font-weight:bold">Invalid Number</span><br><br>';
+      } else {
+        c.value = "+" + inputNumber; // Formatting
+        a.innerHTML = '<span style="color:white;font-weight:bold">Please Wait...</span><br><br>';
+        let { data } = await axios(`/code?number=${inputNumber}`);
+        let code = data.code || "Service Unavailable";
+        a.innerHTML += `<span id="copy" onclick="Copy()" style="color:red
+;font-weight:bold">CODE: <span style="color:white;font-weight:bold">${code}</span></span><br><br>`;
+      }
+    });
+  </script>
+</body>
+</html>
